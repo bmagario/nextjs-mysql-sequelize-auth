@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:  
+  mydb:
+    image: mysql:latest
+    container_name: mysqldock
+    restart: always
+    environment: 
+      MYSQL_ROOT_PASSWORD: <MYSQL_ROOT_PASSWORD>
+      MYSQL_PASSWORD: <MYSQL_PASSWORD>
+      MYSQL_DATABASE: <MYSQL_DATABASE>
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306
+  myapp:
+    container_name: mynestapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/bmagario/src/app
+      - ./node_modules:/bmagario/node_modules
+    ports:
+      - 3000:3000
+    depends_on:
+      - mydb
+volumes:
+  db_data:
